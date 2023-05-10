@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Script>
+  <Context>Zen26</Context>
+  <Version>1.0</Version>
+  <Language>Python</Language>
+  <Text>#%% Imports -------------------------------------------------------------------
+
+import time
+from os.path import exists
+from System.Diagnostics import Process
+
+#%% Initialize ----------------------------------------------------------------
+
+script_path = r'C:\Users\bdeha\Projects\ETH-ScopeM_Stebler\read_czi.py'
+table_path = r'C:\Users\bdeha\Projects\ETH-ScopeM_Stebler\xyzPos.csv'
+
+#%% Execute -------------------------------------------------------------------
+
+# Execute external Python script
+app = Process();
+app.StartInfo.FileName = script_path
+app.Start()
+
+# Wait xyzPos.csb being created before opening it
+while not exists(table_path):
+    time.sleep(1)
+table = Zen.Application.LoadTable(table_path, False)    
+
+# Extract xyz positions
+xPos = table.Columns[0].Caption
+yPos = table.Columns[1].Caption
+zPos = table.Columns[2].Caption
+
+print(xPos, yPos, zPos)
+
+</Text>
+  <Author></Author>
+  <Description></Description>
+  <Keywords></Keywords>
+  <Row>16</Row>
+  <Column>37</Column>
+</Script>
