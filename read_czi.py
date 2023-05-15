@@ -1,6 +1,7 @@
 #%% Imports -------------------------------------------------------------------
 
 # import csv
+import csv
 import time
 import numpy as np
 from skimage import io 
@@ -11,8 +12,8 @@ from skimage.feature import peak_local_max
 
 #%% Initialize ----------------------------------------------------------------
 
-scene_path = 'D:/ETH-ScopeM_Stebler/HU4NZLpR-202304051711.czi'
-csv_path = 'C:/Users/bdeha/Projects/ETH-ScopeM_Stebler/xyzPos.csv'
+scene_path = 'D:/ETH-ScopeM_CD7-GA/HU4NZLpR-202304051711.czi'
+csv_path = 'C:/Users/bdeha/Projects/ETH-ScopeM_CD7-GA/xyStage.csv'
 
 # Scene extraction
 channel = 2
@@ -81,7 +82,6 @@ with pyczi.open_czi(scene_path) as czidoc:
         wellTile = md_scn[s]['@Name']
         # Stage position (µm, mid)
         stage = md_scn[s]['CenterPosition']
-        print(stage)
         xstage = float(stage[0:stage.index(',')])
         ystage = float(stage[stage.index(',')+1:-1])
         # Stage position (µm, top left)
@@ -124,6 +124,23 @@ with pyczi.open_czi(scene_path) as czidoc:
 end = time.time()
 print(f'  {(end-start):5.3f} s') 
   
+#%% Save ----------------------------------------------------------------------
+
+# Extract xLMStage and yLMStage in a single ndarray
+xyStage = np.column_stack((
+    np.concatenate(sData['xLMStage'], axis=0),
+    np.concatenate(sData['yLMStage'], axis=0)
+    ))
+
+# Get a random subset of the ndarray
+n = 100
+np.random.seed(42)
+indices = np.random.choice(xyStage.shape[0], size=n, replace=False)
+xyStage_subset = xyStage[indices, :]
+
+# Save the subset as csv
+np.savetxt(csv_path, xyStage_subset, delimiter=',', fmt='%.2f')
+
 #%% Display --------------------------------------------------------------------
 
 # start = time.time()

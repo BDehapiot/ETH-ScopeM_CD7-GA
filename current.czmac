@@ -11,8 +11,8 @@ from System.Diagnostics import Process
 
 #%% Initialize ----------------------------------------------------------------
 
-script_path = r'C:\Users\bdeha\Projects\ETH-ScopeM_Stebler\read_czi.py'
-table_path = r'C:\Users\bdeha\Projects\ETH-ScopeM_Stebler\xyzPos.csv'
+script_path = r'C:\Users\bdeha\Projects\ETH-ScopeM_CD7-GA\read_czi.py'
+table_path = r'C:\Users\bdeha\Projects\ETH-ScopeM_CD7-GA\xyStage.csv'
 
 #%% Execute -------------------------------------------------------------------
 
@@ -21,22 +21,23 @@ app = Process();
 app.StartInfo.FileName = script_path
 app.Start()
 
-# Wait xyzPos.csb being created before opening it
+# Wait xyStage.csv being created before opening it
 while not exists(table_path):
     time.sleep(1)
 table = Zen.Application.LoadTable(table_path, False)    
 
-# Extract xyz positions
-xPos = table.Columns[0].Caption
-yPos = table.Columns[1].Caption
-zPos = table.Columns[2].Caption
+# Print number of detected objects
+print(table.RowCount)
 
-print(xPos, yPos, zPos)
+# Extract x and yStage positions as float
+for i in range(table.RowCount):
+    xStage = float(table.GetValue(i, 0))
+    yStage = float(table.GetValue(i, 1))
 
 </Text>
   <Author></Author>
   <Description></Description>
   <Keywords></Keywords>
-  <Row>16</Row>
-  <Column>37</Column>
+  <Row>20</Row>
+  <Column>30</Column>
 </Script>
